@@ -1,8 +1,6 @@
 from binascii import hexlify
 import string
 
-INPUT_STR = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-
 def xor_equal_length(hex_str1: str, hex_str2: str) -> str:
     bytes1 = bytes.fromhex(hex_str1)
     bytes2 = bytes.fromhex(hex_str2)
@@ -17,13 +15,19 @@ def find_xor_key(input_str: str) -> list[tuple[bytes, int, bytes]]:
     scores = []
     for i in range(0xff):
         key = bytes([i] * len(val))
-        result = xor_equal_length(INPUT_STR, hexlify(key).decode())
+        result = xor_equal_length(input_str, hexlify(key).decode())
         score = score_printable_ascii(bytes.fromhex(result))
         scores.append((key, score, bytes.fromhex(result)))
     return scores
 
 
 if __name__ == "__main__":
-    scores = find_xor_key(INPUT_STR)
-    sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
-    print(sorted_scores[0:4])
+    with open("4.txt", "r") as f:
+        input_lines = f.readlines()
+    high_scores = []
+    for input_str in input_lines:
+        scores = find_xor_key(input_str.strip())
+        sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
+        high_scores.append(sorted_scores[0])
+    sorted_high_scores = sorted(high_scores, key=lambda x: x[1], reverse=True)
+    print(sorted_high_scores[0:4])
