@@ -1,12 +1,11 @@
 INPUT_STR = "1c0111001f010100061a024b53535009181c"
 XOR_KEY = "686974207468652062756c6c277320657965"
 
-def xor_equal_length(hex_str1: str, hex_str2: str) -> str:
-    bytes1 = bytes.fromhex(hex_str1)
-    bytes2 = bytes.fromhex(hex_str2)
-    xored_bytes = bytes(b1 ^ b2 for b1, b2 in zip(bytes1, bytes2))
-    return xored_bytes.hex()
+def fixed_length_xor(bytes1: bytes, bytes2: bytes) -> str:
+    return bytes(b1 ^ b2 for b1, b2 in zip(bytes1, bytes2)).hex()
 
 if __name__ == "__main__":
-    result = xor_equal_length(INPUT_STR, XOR_KEY)
+    result = fixed_length_xor(bytes.fromhex(INPUT_STR), bytes.fromhex(XOR_KEY))
     print(result)
+    EXPECTED_RESULT = "746865206b696420646f6e277420706c6179"
+    print(f"Match: {result == EXPECTED_RESULT}")
